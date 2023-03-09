@@ -168,6 +168,18 @@ impl RollResult
 			.fold(0, |acc, val| acc + val.total);
 	}
 	
+	pub fn highest(&self) -> usize
+	{
+		return self.rolls.borrow().iter()
+			.fold(0, |acc, val| acc + val.highest);
+	}
+	
+	pub fn lowest(&self) -> usize
+	{
+		return self.rolls.borrow().iter()
+			.fold(0, |acc, val| acc + val.lowest);
+	}
+	
 	pub fn to_string(&self) -> String
 	{
 		return format!(
@@ -178,6 +190,20 @@ impl RollResult
 		).to_string();
 	}
 	
+	pub fn toString_take(&self, highest: bool) -> String
+	{
+		return format!(
+			"{0} -> {1} = {2}",
+			self.toValueString(),
+			self.toIntermediateString_take(highest),
+			match highest
+			{
+				true => self.highest(),
+				false => self.lowest(),
+			}
+		).to_string();
+	}
+	
 	pub fn toIntermediateString(&self) -> String
 	{
 		return self.rolls.borrow().iter()
@@ -185,6 +211,23 @@ impl RollResult
 				let mut s = acc.to_string();
 				if s.len() > 0 { s.push_str(AdditionSpacer); }
 				s.push_str(roll.total.to_string().as_str());
+				return s;
+			});
+	}
+	
+	pub fn toIntermediateString_take(&self, highest: bool) -> String
+	{
+		return self.rolls.borrow().iter()
+			.fold(String::default(), |acc, roll| {
+				let mut s = acc.to_string();
+				if s.len() > 0 { s.push_str(AdditionSpacer); }
+				
+				match highest
+				{
+					true => s.push_str(roll.highest.to_string().as_str()),
+					false => s.push_str(roll.lowest.to_string().as_str()),
+				};
+				
 				return s;
 			});
 	}
@@ -368,6 +411,24 @@ mod tests
 	}
 	
 	#[test]
+	fn test_RollResult_highest()
+	{
+		let instance = buildRollResult();
+		let result = instance.highest();
+		
+		assert_eq!(result, 10);
+	}
+	
+	#[test]
+	fn test_RollResult_lowest()
+	{
+		let instance = buildRollResult();
+		let result = instance.lowest();
+		
+		assert_eq!(result, 5);
+	}
+	
+	#[test]
 	fn test_RollResult_to_string()
 	{
 		let instance = buildRollResult();
@@ -378,12 +439,40 @@ mod tests
 	}
 	
 	#[test]
+	fn test_RollResult_toString_take()
+	{
+		let instance = buildRollResult();
+		
+		let mut result = instance.toString_take(true);
+		let mut expected = "[4, 2] + [3, 6] -> 4 + 6 = 10".to_string();
+		assert_eq!(result, expected);
+		
+		result = instance.toString_take(false);
+		expected = "[4, 2] + [3, 6] -> 2 + 3 = 5".to_string();
+		assert_eq!(result, expected);
+	}
+	
+	#[test]
 	fn test_RollResult_toIntermediateString()
 	{
 		let instance = buildRollResult();
 		let result = instance.toIntermediateString();
 		let expected = "6 + 9".to_string();
 		
+		assert_eq!(result, expected);
+	}
+	
+	#[test]
+	fn test_RollResult_toIntermediateString_take()
+	{
+		let instance = buildRollResult();
+		
+		let mut result = instance.toIntermediateString_take(true);
+		let mut expected = "4 + 6".to_string();
+		assert_eq!(result, expected);
+		
+		result = instance.toIntermediateString_take(false);
+		expected = "2 + 3".to_string();
 		assert_eq!(result, expected);
 	}
 	

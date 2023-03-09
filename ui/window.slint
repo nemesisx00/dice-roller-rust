@@ -10,16 +10,21 @@ export component MainWindow inherits Window
 	in-out property <string> equation;
 	in-out property <string> result;
 	
-	callback doRoll;
+	callback doTotal;
+	callback doTakeHighest;
+	callback doTakeLowest;
 	callback incrementDie(int);
 	
 	VerticalLayout
 	{
+		spacing: 0;
+		
 		HorizontalLayout
 		{
+			spacing: 0;
 			VerticalLayout
 			{
-				spacing: 5px;
+				spacing: 0;
 				Text { text: equation; horizontal-alignment: center; vertical-alignment: center; }
 				Text { text: result; horizontal-alignment: center; vertical-alignment: center; }
 			}
@@ -59,7 +64,9 @@ export component MainWindow inherits Window
 			VerticalLayout
 			{
 				spacing: 15px;
-				Button { text: "Roll"; clicked => { root.doRoll() } }
+				Button { text: "Roll"; clicked => { root.doTotal() } }
+				Button { text: "Take Highest"; clicked => { root.doTakeHighest() } }
+				Button { text: "Take Lowest"; clicked => { root.doTakeLowest() } }
 			}
 		}
 	}
