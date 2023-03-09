@@ -11,7 +11,7 @@ This is a simple dice roller desktop application written in Rust, utilizing Slin
 
 ### Licensing
 
-This application is using Slint under the open source license GPLv3.
+This application is using [Slint](https://slint-ui.com/) under the open source license GPLv3.
 
 ### Compiling, Testing, and Running
 
