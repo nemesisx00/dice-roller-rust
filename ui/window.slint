@@ -1,0 +1,66 @@
+import { DieButton } from "diebutton.slint";
+import { Button } from "std-widgets.slint";
+
+export component MainWindow inherits Window
+{
+	preferred-width: 400px;
+	preferred-height: 300px;
+	title: "Dice Roller (Rust)";
+	
+	in-out property <string> equation;
+	in-out property <string> result;
+	
+	callback doRoll;
+	callback incrementDie(int);
+	
+	VerticalLayout
+	{
+		HorizontalLayout
+		{
+			VerticalLayout
+			{
+				spacing: 5px;
+				Text { text: equation; horizontal-alignment: center; vertical-alignment: center; }
+				Text { text: result; horizontal-alignment: center; vertical-alignment: center; }
+			}
+		}
+		
+		HorizontalLayout
+		{
+			spacing: 15px;
+			
+			VerticalLayout
+			{
+				spacing: 15px;
+				
+				HorizontalLayout
+				{
+					spacing: 15px;
+					DieButton { sides: 4; clicked => { root.incrementDie(self.sides) } }
+					DieButton { sides: 6; clicked => { root.incrementDie(self.sides) } }
+					DieButton { sides: 8; clicked => { root.incrementDie(self.sides) } }
+				}
+				
+				HorizontalLayout
+				{
+					spacing: 15px;
+					DieButton { sides: 10; clicked => { root.incrementDie(self.sides) } }
+					DieButton { sides: 12; clicked => { root.incrementDie(self.sides) } }
+					DieButton { sides: 20; clicked => { root.incrementDie(self.sides) } }
+				}
+				
+				HorizontalLayout
+				{
+					spacing: 15px;
+					DieButton { sides: 100; clicked => { root.incrementDie(self.sides) } }
+				}
+			}
+			
+			VerticalLayout
+			{
+				spacing: 15px;
+				Button { text: "Roll"; clicked => { root.doRoll() } }
+			}
+		}
+	}
+}

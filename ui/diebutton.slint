@@ -1,0 +1,8 @@
+import { Button } from "std-widgets.slint";
+
+export component DieButton inherits Button
+{
+	in-out property <int> sides;
+	
+	text: "d" + sides;
+}
