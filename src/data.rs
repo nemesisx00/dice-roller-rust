@@ -38,15 +38,7 @@ impl Clone for Equation
 
 impl From<&Equation> for Equation
 {
-	fn from(value: &Self) -> Self
-	{
-		let instance = Self::default();
-		for (die, quantity) in value.read().iter()
-		{
-			instance.set(die.to_owned(), quantity.to_owned());
-		}
-		return instance;
-	}
+	fn from(value: &Self) -> Self { return value.clone(); }
 }
 
 impl Equation
