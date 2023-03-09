@@ -7,7 +7,6 @@ This is a simple dice roller desktop application written in [Rust](https://rust-
 ### Requirements
 
 - [Rust](https://rust-lang.org/)
-- [Slint](https://slint-ui.com/)
 
 ### Licensing
 
