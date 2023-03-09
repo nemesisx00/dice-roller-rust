@@ -1,12 +1,12 @@
 # Dice Roller (Rust)
 
-This is a simple dice roller desktop application written in Rust, utilizing Slint to construct the GUI.
+This is a simple dice roller desktop application written in [Rust](https://rust-lang.org/), utilizing [Slint](https://slint-ui.com/) to construct the GUI.
 
 ## Getting Started
 
 ### Requirements
 
-- [Rust](https://rust-lang.org)
+- [Rust](https://rust-lang.org/)
 - [Slint](https://slint-ui.com/)
 
 ### Licensing
