@@ -1,28 +1,54 @@
 #![allow(non_snake_case, non_upper_case_globals)]
 
-use glib::clone;
-use gtk::glib;
-use gtk::prelude::*;
-use gtk::{
-    Application,
-    ApplicationWindow,
-    Button,
-};
+mod data;
+mod dice;
+mod num;
+
+slint::include_modules!();
+
+use std::borrow::Borrow;
+use std::rc::Rc;
+use crate::data::{Equation, RollResult};
+use crate::dice::Die;
 
 fn main()
 {
-    let app = Application::builder()
-                .application_id("nemesisx00.dice-roller-rust.gtk")
-                .build();
-    app.connect_activate(onActivate);
-    app.run();
-}
-
-fn onActivate(application: &Application)
-{
-    let window = ApplicationWindow::new(application);
-    let button = Button::with_label("Hello World");
-    button.connect_clicked(clone!(@weak window => move |_| window.close()));
-    window.set_child(Some(&button));
-    window.present();
+	let equation = Rc::new(Equation::default());
+	let mainWindow = MainWindow::new();
+	
+	mainWindow.on_incrementDie({
+		let winWeak = mainWindow.as_weak();
+		let eqWeak = Rc::downgrade(&equation);
+		move |value| {
+			let sides = value as usize;
+			let die = Die::new(sides);
+			if let Some(eq) = eqWeak.upgrade()
+			{
+				eq.add(die);
+				winWeak.unwrap()
+					.set_equation(Equation::from(eq.borrow()).to_string().into());
+			}
+		}
+	});
+	
+	mainWindow.on_doRoll({
+		let winWeak = mainWindow.as_weak();
+		let eqWeak = Rc::downgrade(&equation);
+		move || {
+			if let Some(eq) = eqWeak.upgrade()
+			{
+				let win = winWeak.unwrap();
+				
+				let result = RollResult::from(eq.borrow());
+				win.set_result(result.to_string().into());
+				
+				//TODO: Figure out an intuitive means of identifying when the user wants to decrement a die count rather than increment.
+				//For now, just clear the equation after rolling
+				eq.clear();
+				win.set_equation(Equation::from(eq.borrow()).to_string().into());
+			}
+		}
+	});
+	
+	mainWindow.run();
 }
